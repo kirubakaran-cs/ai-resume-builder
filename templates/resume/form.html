@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Create{% endif %} Resume{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card p-4">
+            <h2 class="mb-1">
+                <i class="bi bi-pencil-square text-primary"></i>
+                {% if is_edit %}Edit Your Resume{% else %}Create Your Resume{% endif %}
+            </h2>
+            <p class="text-muted mb-4">Fill out all sections. AI will auto-generate your summary!</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Personal Info -->
+                <h5 class="border-bottom pb-2 mb-3 mt-3 text-primary">
+                    <i class="bi bi-person"></i> Personal Information
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name *</label>
+                        {{ form.full_name }}
+                        <div class="text-danger small">{{ form.full_name.errors.0 }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email *</label>
+                        {{ form.email }}
+                        <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone *</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Location *</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">LinkedIn URL</label>
+                        {{ form.linkedin }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">GitHub URL</label>
+                        {{ form.github }}
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-primary">
+                    <i class="bi bi-briefcase"></i> Work Experience
+                </h5>
+                <p class="text-muted small">Format: <code>Job Title | Company | Period | Description</code></p>
+                {{ form.experience }}
+                <div class="text-danger small">{{ form.experience.errors.0 }}</div>
+
+                <!-- Education -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-primary">
+                    <i class="bi bi-mortarboard"></i> Education
+                </h5>
+                <p class="text-muted small">Format: <code>Degree | Institution | Year</code></p>
+                {{ form.education }}
+                <div class="text-danger small">{{ form.education.errors.0 }}</div>
+
+                <!-- Skills -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-primary">
+                    <i class="bi bi-tools"></i> Skills
+                </h5>
+                <p class="text-muted small">Separate with commas</p>
+                {{ form.skills }}
+
+                <!-- Projects -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-primary">
+                    <i class="bi bi-code-square"></i> Projects
+                </h5>
+                <p class="text-muted small">Format: <code>Project Name | Description | Technologies</code></p>
+                {{ form.projects }}
+
+                <!-- Certifications -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-primary">
+                    <i class="bi bi-award"></i> Certifications
+                </h5>
+                {{ form.certifications }}
+
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-robot"></i> Save & Generate AI Summary
+                    </button>
+                    {% if is_edit %}
+                        <a href="{% url 'resume:preview' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-eye"></i> Preview
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

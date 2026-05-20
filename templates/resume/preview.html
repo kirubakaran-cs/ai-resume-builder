@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Resume Preview — {{ resume.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-eye text-primary"></i> Resume Preview</h2>
+    <div class="d-flex gap-2">
+        <a href="{% url 'resume:form' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a href="{% url 'resume:download_pdf' %}" class="btn btn-danger">
+            <i class="bi bi-download"></i> Download PDF
+        </a>
+    </div>
+</div>
+
+<!-- Resume Card -->
+<div class="card p-5" style="max-width: 800px; margin: 0 auto;">
+
+    <!-- Header -->
+    <div class="text-center border-bottom pb-3 mb-4">
+        <h1 class="fw-bold mb-1">{{ resume.full_name }}</h1>
+        <p class="text-muted">
+            <i class="bi bi-envelope"></i> {{ resume.email }} &nbsp;|&nbsp;
+            <i class="bi bi-telephone"></i> {{ resume.phone }} &nbsp;|&nbsp;
+            <i class="bi bi-geo-alt"></i> {{ resume.location }}
+        </p>
+        {% if resume.linkedin or resume.github %}
+        <p class="small">
+            {% if resume.linkedin %}<a href="{{ resume.linkedin }}" target="_blank">LinkedIn</a>{% endif %}
+            {% if resume.linkedin and resume.github %} &nbsp;|&nbsp; {% endif %}
+            {% if resume.github %}<a href="{{ resume.github }}" target="_blank">GitHub</a>{% endif %}
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- AI Summary -->
+    {% if resume.summary %}
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-robot"></i> Professional Summary
+        </h5>
+        <p>{{ resume.summary }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Experience -->
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-briefcase"></i> Work Experience
+        </h5>
+        {% for job in resume.get_experience_list %}
+        <div class="mb-3">
+            <div class="d-flex justify-content-between">
+                <strong>{{ job.title }}</strong>
+                <span class="text-muted small">{{ job.period }}</span>
+            </div>
+            <div class="text-muted">{{ job.company }}</div>
+            <p class="mt-1 small">{{ job.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Education -->
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-mortarboard"></i> Education
+        </h5>
+        {% for edu in resume.get_education_list %}
+        <div class="d-flex justify-content-between mb-2">
+            <div>
+                <strong>{{ edu.degree }}</strong><br>
+                <span class="text-muted">{{ edu.institution }}</span>
+            </div>
+            <span class="text-muted small">{{ edu.year }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Skills -->
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-tools"></i> Skills
+        </h5>
+        <div>
+            {% for skill in resume.get_skills_list %}
+                <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Projects -->
+    {% if resume.projects %}
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-code-square"></i> Projects
+        </h5>
+        {% for project in resume.get_projects_list %}
+        <div class="mb-2">
+            <strong>{{ project.name }}</strong> — <span class="text-muted small">{{ project.tech }}</span>
+            <p class="small mb-0">{{ project.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Certifications -->
+    {% if resume.certifications %}
+    <div class="mb-4">
+        <h5 class="text-primary border-bottom pb-1">
+            <i class="bi bi-award"></i> Certifications
+        </h5>
+        {% for line in resume.certifications.splitlines %}
+            {% if line.strip %}<p class="mb-1">• {{ line }}</p>{% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
